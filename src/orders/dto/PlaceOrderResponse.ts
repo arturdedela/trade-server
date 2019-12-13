@@ -21,7 +21,7 @@ export class PlaceOrderResponse {
 
   @ApiModelProperty()
   @IsNumber()
-  price: number;
+  price?: number;
 
   @ApiModelProperty()
   @IsDate()

@@ -1,5 +1,5 @@
 import { ApiModelProperty } from '@nestjs/swagger';
-import { IsNumber, IsString } from 'class-validator';
+import { IsInt, IsNumber, IsOptional, IsPositive, IsString } from 'class-validator';
 import { OrderType } from '../const/OrderType';
 
 export class PlaceOrderRequest {
@@ -12,10 +12,12 @@ export class PlaceOrderRequest {
   orderType: OrderType;
 
   @ApiModelProperty()
-  @IsNumber()
-  price: number;
+  @IsPositive()
+  @IsOptional()
+  price?: number;
 
   @ApiModelProperty()
-  @IsNumber()
+  @IsInt()
+  @IsPositive()
   lots: number;
 }

@@ -4,7 +4,7 @@ import { OrderType } from './const/OrderType';
 
 @Entity()
 export class OrdersEntity {
-  constructor(security: SecurityEntity | number, type: OrderType, lots: number, price: number) {
+  constructor(security: SecurityEntity | number, type: OrderType, lots: number, price?: number) {
     if (typeof security === 'number') {
       this.securityId = security;
     } else {
@@ -15,6 +15,10 @@ export class OrdersEntity {
     this.price = price;
     this.cancelled = false;
     this.executedQuantity = 0;
+  }
+
+  get isMarketPrice(): boolean {
+    return !this.price;
   }
 
   get executed(): boolean {
@@ -36,8 +40,8 @@ export class OrdersEntity {
   @Column()
   lots: number;
 
-  @Column('numeric')
-  price: number;
+  @Column('numeric', { nullable: true })
+  price?: number;
 
   @CreateDateColumn()
   date: string;
