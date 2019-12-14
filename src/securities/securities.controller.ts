@@ -1,10 +1,11 @@
 import { Body, Controller, Inject, Post, UseGuards } from '@nestjs/common';
-import { ApiBearerAuth } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiUseTags } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
 import { StartIPORequest } from './dto/StartIPORequest';
 import { SecuritiesService } from './securities.service';
 import { UserId } from '../shared/decorators/UserId';
 
+@ApiUseTags('securities')
 @Controller('securities')
 export class SecuritiesController {
   @Inject(SecuritiesService)

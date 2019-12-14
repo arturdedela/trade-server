@@ -113,4 +113,24 @@ export class OrdersService {
 
     return true;
   }
+
+  async getUserOrders(userId: number): Promise<OrderEntity[]> {
+    return await this.ordersRepository.find({
+      where: {
+        userId,
+        executedQuantity: Raw(alias => `${alias} < "lots"`),
+      },
+      relations: ['security'],
+    });
+  }
+
+  async getUserDeals(userId: number): Promise<OrderEntity[]> {
+    return await this.ordersRepository.find({
+      where: {
+        userId,
+        executedQuantity: Raw(alias => `${alias}="lots"`),
+      },
+      relations: ['security'],
+    });
+  }
 }

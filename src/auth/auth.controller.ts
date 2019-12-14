@@ -1,6 +1,6 @@
 import { Controller, Post, UseGuards, Body, Req, HttpCode, Get, NotFoundException } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
-import { ApiBearerAuth, ApiOkResponse } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOkResponse, ApiUseTags } from '@nestjs/swagger';
 
 import { AuthService } from './auth.service';
 import { InLoginDto } from './dto/in.login.dto';
@@ -9,6 +9,7 @@ import { OutLoginDto } from './dto/out.login.dto';
 import { UserId } from '../shared/decorators/UserId';
 import { OutUserDto } from './dto/out.user.dto';
 
+@ApiUseTags('auth')
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}

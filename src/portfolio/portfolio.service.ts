@@ -2,21 +2,23 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UserSecurityEntity } from './userSecurity.entity';
 import { Repository } from 'typeorm';
+import { OrderType } from '../orders/const/OrderType';
 
 @Injectable()
 export class PortfolioService {
   @InjectRepository(UserSecurityEntity)
   userSecuritiesRepository: Repository<UserSecurityEntity>;
 
-  async getUserPortfolio(userId: number) {
+  async getUserPortfolio(userId: number): Promise<UserSecurityEntity[]> {
+    return await this.userSecuritiesRepository.find({ userId });
   }
 
-  async updatePosition(userId: number, securityId: number, type: 'SELL' | 'BUY', position: number, price: number): Promise<UserSecurityEntity | null> {
+  async updatePosition(userId: number, securityId: number, type: OrderType, position: number, price: number): Promise<UserSecurityEntity | null> {
     let userSecurity = await this.userSecuritiesRepository.findOne({ where: { userId, securityId }});
-    position *= type === 'SELL' ? -1 : 1;
+    position *= type === OrderType.Sell ? -1 : 1;
 
     if (userSecurity) {
-      if (type === 'BUY') {
+      if (type === OrderType.Buy) {
         userSecurity.average = (userSecurity.position * userSecurity.average + position * price) / (userSecurity.position + position);
       }
 

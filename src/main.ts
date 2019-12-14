@@ -13,9 +13,8 @@ async function bootstrap() {
   app.useGlobalPipes(new ValidationPipe());
 
   const options = new DocumentBuilder()
-    .setTitle('Files uploading')
+    .setTitle('Exchange API')
     .setSchemes('https', 'http')
-    .setDescription('The upload API description')
     .setVersion('0.1')
     .addBearerAuth('Authorization', 'header')
     .build();

@@ -1,4 +1,4 @@
-import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 import { SecurityEntity } from '../securities/security.entity';
 import { OrderType } from './const/OrderType';
 import { UserEntity } from '../user/user.entity';
@@ -60,6 +60,7 @@ export class OrderEntity {
   price?: number;
 
   @CreateDateColumn()
+  @UpdateDateColumn()
   date: string;
 
   @Column()
