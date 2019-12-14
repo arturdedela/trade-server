@@ -128,7 +128,7 @@ export class OrdersService {
     return await this.ordersRepository.find({
       where: {
         userId,
-        executedQuantity: Raw(alias => `${alias}="lots"`),
+        executedQuantity: Raw(alias => `${alias} = "lots"`),
       },
       relations: ['security'],
     });

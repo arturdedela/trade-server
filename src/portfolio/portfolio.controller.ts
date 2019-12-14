@@ -1,8 +1,9 @@
 import { Controller, Get, Inject, UseGuards } from '@nestjs/common';
-import { ApiBearerAuth, ApiUseTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOkResponse, ApiUseTags } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
 import { UserId } from '../shared/decorators/UserId';
 import { PortfolioService } from './portfolio.service';
+import { PortfolioModel } from './portfolio.model';
 
 @ApiUseTags('portfolio')
 @ApiBearerAuth()
@@ -12,6 +13,7 @@ export class PortfolioController {
   @Inject(PortfolioService)
   portfolioService: PortfolioService;
 
+  @ApiOkResponse({ type: PortfolioModel })
   @Get()
   async getPortfolio(@UserId() userId: number) {
     return await this.portfolioService.getUserPortfolio(userId);

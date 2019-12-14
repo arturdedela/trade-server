@@ -3,14 +3,17 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { UserSecurityEntity } from './userSecurity.entity';
 import { Repository } from 'typeorm';
 import { OrderType } from '../orders/const/OrderType';
+import { PortfolioModel } from './portfolio.model';
 
 @Injectable()
 export class PortfolioService {
   @InjectRepository(UserSecurityEntity)
   userSecuritiesRepository: Repository<UserSecurityEntity>;
 
-  async getUserPortfolio(userId: number): Promise<UserSecurityEntity[]> {
-    return await this.userSecuritiesRepository.find({ userId });
+  async getUserPortfolio(userId: number): Promise<PortfolioModel> {
+    const securities = await this.userSecuritiesRepository.find({ userId });
+
+    return new PortfolioModel(securities);
   }
 
   async updatePosition(userId: number, securityId: number, type: OrderType, position: number, price: number): Promise<UserSecurityEntity | null> {
