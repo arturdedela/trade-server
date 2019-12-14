@@ -19,4 +19,8 @@ export class SecuritiesService {
 
     await this.ordersService.createIPOOrder(security);
   }
+
+  async getSecurities() {
+    return this.securitiesRepository.find();
+  }
 }
