@@ -5,11 +5,12 @@ function getConfig() {
       type: "postgres",
       host: "localhost",
       port: 5432,
-      username: "trade-broker",
-      password: "trade-broker",
-      database: "trade",
+      username: "exchange",
+      password: "exchange",
+      database: "exchange",
       entities: [`dist/**/**.entity{.ts,.js}`],
       synchronize: true,
+      logging: true,
     }
   }
 

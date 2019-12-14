@@ -5,6 +5,7 @@ import { PlaceOrderRequest } from './dto/PlaceOrderRequest';
 import { OrdersService } from './orders.service';
 import { PlaceOrderResponse } from './dto/PlaceOrderResponse';
 import { CancelOrderRequest } from './dto/CancelOrderRequest';
+import { UserId } from '../shared/decorators/UserId';
 
 @ApiBearerAuth()
 @UseGuards(AuthGuard('jwt'))
@@ -15,8 +16,8 @@ export class OrdersController {
 
   @ApiOkResponse({ type: PlaceOrderResponse })
   @Post('place')
-  async placeOrder(@Body() body: PlaceOrderRequest): Promise<PlaceOrderResponse> {
-    return await this.ordersService.placeOrder(body);
+  async placeOrder(@UserId() userId, @Body() body: PlaceOrderRequest): Promise<PlaceOrderResponse> {
+    return await this.ordersService.placeOrder(userId, body);
   }
 
   @Put('cancel')

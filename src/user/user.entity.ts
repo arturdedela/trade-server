@@ -1,5 +1,6 @@
-import { Entity, PrimaryGeneratedColumn, Column, BeforeInsert } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, BeforeInsert, OneToMany } from 'typeorm';
 import * as crypto from 'crypto';
+import { OrderEntity } from '../orders/order.entity';
 
 @Entity()
 export class UserEntity {
@@ -32,6 +33,9 @@ export class UserEntity {
 
   @Column()
   phoneNumber: string;
+
+  @OneToMany(type => OrderEntity, order => order.user)
+  orders?: OrderEntity[];
 
   @BeforeInsert()
   beforeInsert() {

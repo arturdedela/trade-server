@@ -1,15 +1,25 @@
 import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { SecurityEntity } from '../securities/security.entity';
 import { OrderType } from './const/OrderType';
+import { UserEntity } from '../user/user.entity';
 
 @Entity()
-export class OrdersEntity {
-  constructor(security: SecurityEntity | number, type: OrderType, lots: number, price?: number) {
+export class OrderEntity {
+  constructor(security: SecurityEntity | number, user: UserEntity | number | undefined, type: OrderType, lots: number, price?: number) {
     if (typeof security === 'number') {
       this.securityId = security;
     } else {
       this.security = security;
     }
+    // If user undefined, order is IPO
+    if (user) {
+      if (typeof user === 'number') {
+        this.userId = user;
+      } else {
+        this.user = user;
+      }
+    }
+
     this.type = type;
     this.lots = lots;
     this.price = price;
@@ -33,6 +43,12 @@ export class OrdersEntity {
 
   @Column()
   securityId: number;
+
+  @ManyToOne(type => UserEntity)
+  user?: UserEntity;
+
+  @Column({ nullable: true })
+  userId?: number;
 
   @Column()
   type: OrderType;

@@ -13,7 +13,7 @@ export class SecuritiesService {
   @Inject(OrdersService)
   private ordersService: OrdersService;
 
-  async startIPO({ ticker, fullName, price, quantity }: StartIPORequest) {
+  async startIPO(userId: number, { ticker, fullName, price, quantity }: StartIPORequest) {
     const security = new SecurityEntity(ticker, fullName, price, quantity);
     await this.securitiesRepository.save(security);
 

@@ -3,6 +3,7 @@ import { ApiBearerAuth } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
 import { StartIPORequest } from './dto/StartIPORequest';
 import { SecuritiesService } from './securities.service';
+import { UserId } from '../shared/decorators/UserId';
 
 @Controller('securities')
 export class SecuritiesController {
@@ -12,8 +13,8 @@ export class SecuritiesController {
   @ApiBearerAuth()
   @UseGuards(AuthGuard('jwt'))
   @Post('start_ipo')
-  async startIPO(@Body() body: StartIPORequest) {
-    await this.securitiesService.startIPO(body);
+  async startIPO(@UserId() userId: number, @Body() body: StartIPORequest) {
+    await this.securitiesService.startIPO(userId, body);
 
     return 'Started IPO for ' + body.fullName;
   }

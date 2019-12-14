@@ -1,4 +1,4 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { BeforeUpdate, Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
 export class SecurityEntity {
@@ -7,7 +7,6 @@ export class SecurityEntity {
     this.fullName = fullName;
     this.openPrice = this.marketPrice = price;
     this.quantity = quantity;
-    this.marketCap = price * quantity;
   }
 
   @PrimaryGeneratedColumn()
@@ -27,9 +26,6 @@ export class SecurityEntity {
 
   @Column()
   fullName: string;
-
-  @Column('numeric')
-  marketCap: number;
 
   @Column()
   quantity: number;
