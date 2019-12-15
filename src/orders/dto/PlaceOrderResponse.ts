@@ -1,6 +1,6 @@
 import { ApiModelProperty } from '@nestjs/swagger';
 import { IsBoolean, IsDate, IsNumber, IsString } from 'class-validator';
-import { OrderType } from '../const/OrderType';
+import { OrderOperation } from '../const/OrderOperation';
 
 export class PlaceOrderResponse {
   @ApiModelProperty()
@@ -13,7 +13,7 @@ export class PlaceOrderResponse {
 
   @ApiModelProperty()
   @IsString()
-  type: OrderType;
+  operation: OrderOperation;
 
   @ApiModelProperty()
   @IsNumber()

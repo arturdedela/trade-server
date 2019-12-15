@@ -10,6 +10,7 @@ export class UserEntity {
     this.firstName = firstName;
     this.lastName = lastName;
     this.phoneNumber = phoneNumber;
+    this.rubles = 0;
   }
 
   static hashPassword(password: string) {
@@ -33,6 +34,9 @@ export class UserEntity {
 
   @Column()
   phoneNumber: string;
+
+  @Column()
+  rubles: number;
 
   @OneToMany(type => OrderEntity, order => order.user)
   orders?: OrderEntity[];

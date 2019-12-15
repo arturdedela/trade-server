@@ -1,4 +1,4 @@
-export enum OrderType {
+export enum OrderOperation {
   Buy = 'BUY',
   Sell = 'SELL',
 }

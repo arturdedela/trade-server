@@ -3,7 +3,7 @@ import { ApiBearerAuth, ApiOkResponse, ApiUseTags } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
 import { UserId } from '../shared/decorators/UserId';
 import { PortfolioService } from './portfolio.service';
-import { PortfolioModel } from './portfolio.model';
+import { PortfolioModel } from './models/portfolio.model';
 
 @ApiUseTags('portfolio')
 @ApiBearerAuth()

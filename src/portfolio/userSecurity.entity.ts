@@ -4,7 +4,7 @@ import { SecurityEntity } from '../securities/security.entity';
 
 @Entity()
 export class UserSecurityEntity {
-  constructor(user: UserEntity | number, security: SecurityEntity | number, position: number, average: number) {
+  constructor(user: UserEntity | number, security: SecurityEntity | number, position: number, averagePrice: number) {
     if (typeof user === 'number') {
       this.userId = user;
     } else {
@@ -16,7 +16,7 @@ export class UserSecurityEntity {
       this.security = security;
     }
     this.position = position;
-    this.average = average;
+    this.averagePrice = averagePrice;
   }
 
   @ManyToOne(type => UserEntity)
@@ -35,7 +35,7 @@ export class UserSecurityEntity {
   position: number;
 
   @Column('numeric')
-  average: number;
+  averagePrice: number;
 
   public get equity() {
     return this.security.marketPrice * this.position;

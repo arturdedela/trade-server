@@ -1,11 +1,11 @@
 import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 import { SecurityEntity } from '../securities/security.entity';
-import { OrderType } from './const/OrderType';
+import { OrderOperation } from './const/OrderOperation';
 import { UserEntity } from '../user/user.entity';
 
 @Entity()
 export class OrderEntity {
-  constructor(security: SecurityEntity | number, user: UserEntity | number | undefined, type: OrderType, lots: number, price?: number) {
+  constructor(security: SecurityEntity | number, user: UserEntity | number | undefined, type: OrderOperation, lots: number, price?: number) {
     if (typeof security === 'number') {
       this.securityId = security;
     } else {
@@ -20,7 +20,7 @@ export class OrderEntity {
       }
     }
 
-    this.type = type;
+    this.operation = type;
     this.lots = lots;
     this.price = price;
     this.cancelled = false;
@@ -51,7 +51,7 @@ export class OrderEntity {
   userId?: number;
 
   @Column()
-  type: OrderType;
+  operation: OrderOperation;
 
   @Column()
   lots: number;

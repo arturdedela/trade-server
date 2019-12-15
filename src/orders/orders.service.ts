@@ -3,9 +3,11 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { OrderEntity } from './order.entity';
 import { FindConditions, Not, Raw, Repository } from 'typeorm';
 import { SecurityEntity } from '../securities/security.entity';
-import { OrderType } from './const/OrderType';
+import { OrderOperation } from './const/OrderOperation';
 import { PlaceOrderRequest } from './dto/PlaceOrderRequest';
 import { PortfolioService } from '../portfolio/portfolio.service';
+import { OrderModel } from './models/order.model';
+import { DealModel } from './models/deal.model';
 
 @Injectable()
 export class OrdersService {
@@ -19,7 +21,7 @@ export class OrdersService {
   securitiesRepository: Repository<SecurityEntity>;
 
   async createIPOOrder(security: SecurityEntity) {
-    const IPOOrder = new OrderEntity(security, undefined, OrderType.Sell, security.quantity, security.marketPrice);
+    const IPOOrder = new OrderEntity(security, undefined, OrderOperation.Sell, security.quantity, security.marketPrice);
 
     await this.ordersRepository.save(IPOOrder);
   }
@@ -33,7 +35,7 @@ export class OrdersService {
     const where: FindConditions<OrderEntity> = {
       userId: Raw(alias => `(${alias} != ${userId}) OR (${alias} ISNULL)`),
       securityId,
-      type: orderType === OrderType.Sell ? OrderType.Buy : OrderType.Sell,
+      operation: orderType === OrderOperation.Sell ? OrderOperation.Buy : OrderOperation.Sell,
       cancelled: false,
       executedQuantity: Raw(alias => `${alias} < "lots"`),
     };
@@ -65,7 +67,7 @@ export class OrdersService {
         orderExecutionTotalCost += requiredLots * security.marketPrice;
 
         if (order.userId) {
-          this.portfolioService.updatePosition(order.userId, security.id, order.type, requiredLots, security.marketPrice);
+          this.portfolioService.updatePosition(order.userId, security.id, order.operation, requiredLots, security.marketPrice);
         }
 
         return true;
@@ -76,7 +78,7 @@ export class OrdersService {
       orderExecutionTotalCost += availableLots * security.marketPrice;
 
       if (order.userId) {
-        this.portfolioService.updatePosition(order.userId, security.id, order.type, availableLots, security.marketPrice);
+        this.portfolioService.updatePosition(order.userId, security.id, order.operation, availableLots, security.marketPrice);
       }
 
       return false;
@@ -86,7 +88,7 @@ export class OrdersService {
       this.portfolioService.updatePosition(
         userId,
         newOrder.securityId,
-        newOrder.type,
+        newOrder.operation,
         newOrder.executedQuantity,
         orderExecutionTotalCost / newOrder.executedQuantity,
       );
@@ -114,23 +116,34 @@ export class OrdersService {
     return true;
   }
 
-  async getUserOrders(userId: number): Promise<OrderEntity[]> {
-    return await this.ordersRepository.find({
+  async getUserOrders(userId: number): Promise<OrderModel[]> {
+    const orders = await this.ordersRepository.find({
       where: {
         userId,
         executedQuantity: Raw(alias => `${alias} < "lots"`),
       },
       relations: ['security'],
     });
+
+    return orders.map(order => new OrderModel(order));
   }
 
-  async getUserDeals(userId: number): Promise<OrderEntity[]> {
-    return await this.ordersRepository.find({
+  async getUserDeals(userId: number): Promise<DealModel[]> {
+    const orders = await this.ordersRepository.find({
       where: {
         userId,
         executedQuantity: Raw(alias => `${alias} = "lots"`),
       },
       relations: ['security'],
+    });
+
+    return orders.map(order => new DealModel(order));
+  }
+
+  async getLastDealForSecurity(securityId: number): Promise<OrderEntity | undefined> {
+    return await this.ordersRepository.findOne({
+      where: { securityId },
+      order: { date: 'DESC' },
     });
   }
 }

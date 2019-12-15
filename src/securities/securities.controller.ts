@@ -1,9 +1,10 @@
 import { Body, Controller, Get, Inject, Post, UseGuards } from '@nestjs/common';
-import { ApiBearerAuth, ApiUseTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOkResponse, ApiUseTags } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
 import { StartIPORequest } from './dto/StartIPORequest';
 import { SecuritiesService } from './securities.service';
 import { UserId } from '../shared/decorators/UserId';
+import { GetSecuritiesResponse } from './dto/GetSecuritiesResponse';
 
 @ApiUseTags('securities')
 @ApiBearerAuth()
@@ -20,8 +21,11 @@ export class SecuritiesController {
     return 'Started IPO for ' + body.fullName;
   }
 
+  @ApiOkResponse({ type: GetSecuritiesResponse, isArray: true })
   @Get()
   async getSecurities() {
-    return this.securitiesService.getSecurities();
+    const securities = await this.securitiesService.getSecurities();
+
+    return securities.map(security => new GetSecuritiesResponse(security));
   }
 }

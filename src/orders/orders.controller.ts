@@ -6,6 +6,8 @@ import { OrdersService } from './orders.service';
 import { PlaceOrderResponse } from './dto/PlaceOrderResponse';
 import { CancelOrderRequest } from './dto/CancelOrderRequest';
 import { UserId } from '../shared/decorators/UserId';
+import { OrderModel } from './models/order.model';
+import { DealModel } from './models/deal.model';
 
 @ApiUseTags('orders')
 @ApiBearerAuth()
@@ -26,11 +28,15 @@ export class OrdersController {
     await this.ordersService.cancelOrder(body.orderId);
   }
 
+  @ApiOkResponse({ type: OrderModel, isArray: true })
   @Get()
-  async getUserOrder(@UserId() userId: number) {
-    return await this.ordersService.getUserOrders(userId);
+  async getUserOrders(@UserId() userId: number) {
+    const orders = await this.ordersService.getUserOrders(userId);
+    console.log(orders);
+    return orders;
   }
 
+  @ApiOkResponse({ type: DealModel, isArray: true })
   @Get('deals')
   async getUserDeals(@UserId() userId: number) {
     return await this.ordersService.getUserDeals(userId);
