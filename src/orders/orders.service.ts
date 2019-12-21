@@ -26,7 +26,7 @@ export class OrdersService {
     await this.ordersRepository.save(IPOOrder);
   }
 
-  async placeOrder(userId: number, { lots, orderType, price, securityId }: PlaceOrderRequest): Promise<OrderEntity> {
+  async placeOrder(userId: number, { lots, operation, price, securityId }: PlaceOrderRequest): Promise<OrderEntity> {
     const security = await this.securitiesRepository.findOne(securityId);
     if (!security) {
       throw new NotFoundException('Security with id: ' + securityId + ' not found.');
@@ -35,7 +35,7 @@ export class OrdersService {
     const where: FindConditions<OrderEntity> = {
       userId: Raw(alias => `(${alias} != ${userId}) OR (${alias} ISNULL)`),
       securityId,
-      operation: orderType === OrderOperation.Sell ? OrderOperation.Buy : OrderOperation.Sell,
+      operation: operation === OrderOperation.Sell ? OrderOperation.Buy : OrderOperation.Sell,
       cancelled: false,
       executedQuantity: Raw(alias => `${alias} < "lots"`),
     };
@@ -48,7 +48,7 @@ export class OrdersService {
       where, order: { price: price ? undefined : 'ASC', date: 'ASC' },
     });
 
-    const newOrder = new OrderEntity(securityId, userId, orderType, lots, price);
+    const newOrder = new OrderEntity(securityId, userId, operation, lots, price);
 
     const ordersForSave: OrderEntity[] = [];
     let orderExecutionTotalCost = 0;
@@ -122,6 +122,7 @@ export class OrdersService {
         userId,
         executedQuantity: Raw(alias => `${alias} < "lots"`),
       },
+      order: { date: 'DESC' },
       relations: ['security'],
     });
 
@@ -134,6 +135,7 @@ export class OrdersService {
         userId,
         executedQuantity: Raw(alias => `${alias} = "lots"`),
       },
+      order: { date: 'DESC' },
       relations: ['security'],
     });
 

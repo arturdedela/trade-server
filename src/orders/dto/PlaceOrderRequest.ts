@@ -9,7 +9,7 @@ export class PlaceOrderRequest {
 
   @ApiModelProperty()
   @IsString()
-  orderType: OrderOperation;
+  operation: OrderOperation;
 
   @ApiModelProperty()
   @IsPositive()
