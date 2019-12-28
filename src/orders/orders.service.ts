@@ -33,7 +33,7 @@ export class OrdersService {
     }
 
     const where: FindConditions<OrderEntity> = {
-      userId: Raw(alias => `(${alias} != ${userId}) OR (${alias} ISNULL)`),
+      userId: Raw(alias => `((${alias} != ${userId}) OR (${alias} ISNULL))`),
       securityId,
       operation: operation === OrderOperation.Sell ? OrderOperation.Buy : OrderOperation.Sell,
       cancelled: false,

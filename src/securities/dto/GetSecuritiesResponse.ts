@@ -10,7 +10,7 @@ export class GetSecuritiesResponse {
     this.fullName = securityEntity.fullName;
     this.quantity = securityEntity.quantity;
     this.change = this.marketPrice - this.openPrice;
-    this.changePercents = this.change / this.openPrice;
+    this.changePercents = this.change / this.openPrice * 100;
     this.marketCap = this.quantity * this.marketPrice;
   }
 
