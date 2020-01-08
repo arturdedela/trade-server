@@ -12,7 +12,7 @@ async function bootstrap() {
   });
 
   await app.get(Connection).query(`
-    CREATE TABLE logs (
+    CREATE TABLE IF NOT EXISTS logs (
         date timestamp default now() NOT NULL,
         info varchar NOT NULL
     );
